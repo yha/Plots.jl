@@ -259,6 +259,15 @@ const _subplot_defaults = KW(
     :bottom_margin            => :match,
     :subplot_index            => -1,
     :colorbar_title           => "",
+    :fontfamily => "Helvetica",
+    :fontsize => 10,
+    :fontcolor => :match, # matches foreground_color
+    :titlefontfamily => :match,
+    :titlefontsize => :match,
+    :titlefontcolor => :match,
+    :legendfontfamily => :match,
+    :legendfontsize => :match,
+    :legendfontcolor => :match,
 )
 
 const _axis_defaults = KW(
@@ -278,6 +287,12 @@ const _axis_defaults = KW(
     :discrete_values => [],
     :formatter => :auto,
     :mirror => false,
+    :tickfontfamily => :match,
+    :tickfontsize => :match,
+    :tickfontcolor => :match,
+    :guidefontfamily => :match,
+    :guidefontsize => :match,
+    :guidefontcolor => :match,
 )
 
 const _suppress_warnings = Set{Symbol}([
@@ -942,7 +957,12 @@ const _match_map2 = KW(
     :foreground_color_border  => :foreground_color_subplot,
     :foreground_color_guide   => :foreground_color_subplot,
     :foreground_color_text    => :foreground_color_subplot,
+    :fontcolor => :foreground_color_subplot,
 )
+
+for prefix in (:title,:legend,:guide,:tick), postfix in (:family,:size,:color)
+    _match_map2[Symbol(prefix,:font,postfix)] = Symbol(:font,postfix)
+end
 
 # properly retrieve from plt.attr, passing `:match` to the correct key
 function Base.getindex(plt::Plot, k::Symbol)
